@@ -33,11 +33,11 @@ function Table() {
   ];
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
+    <div className="pl-6 bg-white rounded-lg shadow-md">
       <table className="w-full text-left">
-        <thead className="shadow-md">
+        <thead className="">
           <tr>
-            <th className="py-2 text-justify">Date</th>
+            <th className="py-2 pl-4 text-justify">Date</th>
             <th className="py-2 text-justify">Time</th>
             <th className="py-2 text-justify">Tank No:</th>
             <th className="py-2 text-justify">O₂ level (ppm)</th>
@@ -69,7 +69,7 @@ function Table() {
               {groupIdx < groupedData.length - 1 && (
                 <tr>
                   <td colSpan={7} className="py-0">
-                    <div className="mx-auto my-2 w-2/3 h-0.5 bg-gray-300 rounded"></div>
+                    <div className="mx-auto my-2 w-2/3 h-0.5 bg-white rounded"></div>
                   </td>
                 </tr>
               )}
@@ -78,7 +78,7 @@ function Table() {
         </tbody>
       </table>
       <hr className="border-t-2 border-black my-2" />
-      <div className="text-center mt-4 cursor-pointer bg-white rounded-lg shadow-md">See All</div>
+      <div className="text-center mt-4 pb-3 cursor-pointer bg-white rounded-lg shadow-md">See All</div>
     </div>
   );
 }

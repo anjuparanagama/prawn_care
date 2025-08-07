@@ -103,7 +103,7 @@ export default function User() {
   };
 
   return (
-    <div className='bg-gray-100 h-screen flex flex-row text-blue-700 overflow-hidden'>
+    <div className='bg-white h-screen flex flex-row text-blue-700 overflow-hidden'>
       {/* Left Space */}
       <div className="w-1/6 h-full bg-cyan-50"></div>
       

@@ -1,4 +1,4 @@
-import PurchaseUpper from "../components/PurchaseUpper";
+import PurchaseUpper from "../components/purchase/PurchaseUpper";
 import Navbar from "../components/Navbar";
 
 export default function Home() {

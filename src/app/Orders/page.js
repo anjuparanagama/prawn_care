@@ -6,7 +6,7 @@ import OrderStatus from '../components/orderdetails/OrderStatus';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <div className="flex flex-col lg:flex-row border border-gray-200">
         {/* Navbar - Full width on mobile, sidebar on desktop */}
         <div className="w-full lg:w-64 lg:min-h-screen bg-white flex-shrink-0">

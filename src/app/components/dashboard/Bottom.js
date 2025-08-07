@@ -100,7 +100,7 @@ export default function CardLineChart() {
   }, []);
 
   return (
-    <div className="bg-gray-100 rounded-xl shadow p-3 sm:p-6 mb-4 sm:mb-8">
+    <div className="bg-gray-50 rounded-xl shadow p-3 sm:p-6 mb-4 sm:mb-8">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
         <div>
           <h1 className="text-base sm:text-lg font-bold text-gray-700">Revenue</h1>
@@ -110,7 +110,7 @@ export default function CardLineChart() {
           <option>Quarterly</option>
         </select>
       </div>
-      <div className="relative h-[250px] sm:h-[350px] w-full">
+      <div className="relative h-[400px] sm:h-[400px] w-full">
         <canvas id="line-chart" />
       </div>
     </div>
