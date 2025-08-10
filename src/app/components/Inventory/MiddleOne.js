@@ -6,77 +6,111 @@ export default function AddInventory() {
   const [qty, setQty] = useState('');
   const [date, setDate] = useState('');
 
-  const handleAdd = () => {
-    console.log('Adding Item:', { itemName, qty, date });
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!itemName.trim()) {
+      alert("Please enter an item name");
+      return;
+    }
+
+    if (!qty || parseInt(qty) < 0) {
+      alert("Please enter a valid quantity");
+      return;
+    }
+
+    if (!date) {
+      alert("Please select a date");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/inventory/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemName, qty, date }),
+      });
+
+      // Check if response is JSON
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      
+      if (data.success) {
+        alert(data.message || "Item added successfully");
+        setItemName('');
+        setDate('');
+        setQty('');
+      } else {
+        alert(data.message || "Error adding item. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      if (error.message.includes("Server returned")) {
+        alert("Server error. Please check if the backend is running.");
+      } else {
+        alert("Network error. Please check your connection and try again.");
+      }
+    }
   };
 
   return (
     <div className="bg-gray-100 ">
-      {/* Main content */}
       <div className="w-full p-3 sm:p-4 md:p-6 bg-gray-50">
-
-        {/* New Items Header */}
         <div className="bg-blue-100 rounded-md p-3 mb-2 sm:mb-3">
           <h2 className="text-center text-[#0019FA] italic text-sm sm:text-base font-medium">
             New Items
           </h2>
         </div>
 
-        {/* Form Container */}
         <div className="bg-white rounded-md shadow-md p-3 sm:p-4 md:p-6">
           <div className="mt-0">
-
             {/* Desktop/Tablet Layout */}
             <div className="hidden sm:block">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
-                {/* Left Column */}
                 <div className="space-y-4 lg:space-y-5">
-                  {/* Item Name */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <label className="text-sm font-medium min-w-0 sm:min-w-[100px] lg:min-w-[120px]">Item Name</label>
+                    <label className="text-sm font-medium sm:min-w-[100px] lg:min-w-[120px]">Item Name</label>
                     <input
                       type="text"
                       value={itemName}
                       onChange={(e) => setItemName(e.target.value)}
-                      className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter item name"
                     />
                   </div>
 
-                  {/* Date */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <label className="text-sm font-medium min-w-0 sm:min-w-[100px] lg:min-w-[120px]">Date</label>
+                    <label className="text-sm font-medium sm:min-w-[100px] lg:min-w-[120px]">Date</label>
                     <input
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
-                      className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
 
-                {/* Right Column */}
                 <div className="space-y-4 lg:space-y-5">
-                  {/* Quantity */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <label className="text-sm font-medium min-w-0 sm:min-w-[100px] lg:min-w-[120px]">Quantity</label>
+                    <label className="text-sm font-medium sm:min-w-[100px] lg:min-w-[120px]">Quantity</label>
                     <input
                       type="number"
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}
-                      className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter quantity"
                       min="0"
                     />
                   </div>
 
-                  {/* Add Button */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <div className="min-w-0 sm:min-w-[100px] lg:min-w-[120px]"></div>
+                    <div className="sm:min-w-[100px] lg:min-w-[120px]"></div>
                     <button
                       onClick={handleAdd}
-                      className="w-full sm:flex-1 lg:w-60 bg-[#0616F9] text-white px-6 py-2.5 rounded-md hover:bg-blue-600 active:bg-blue-700 transition-colors font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm hover:shadow-md"
-                    >
+                      className="w-full sm:flex-1 lg:w-60 bg-[#0616F9] text-white px-6 py-2.5 rounded-md hover:bg-blue-600">
                       ADD ITEM
                     </button>
                   </div>
@@ -85,61 +119,55 @@ export default function AddInventory() {
             </div>
 
             {/* Mobile Layout */}
-            <div className="block sm:hidden">
-              <div className="space-y-5">
-                {/* Item Name */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">Item ID</label>
-                  <input
-                    type="number"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    placeholder="Enter item name"
-                  />
-                </div>
+            <div className="block sm:hidden space-y-5">
+              <div>
+                <label className="block text-sm font-medium mb-2">Item Name</label>
+                <input
+                  type="text"
+                  value={itemName}
+                  onChange={(e) => setItemName(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm"
+                  placeholder="Enter item name"
+                />
+              </div>
 
-                {/* Quantity */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">Quantity</label>
-                  <input
-                    type="number"
-                    value={qty}
-                    onChange={(e) => setQty(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    placeholder="Enter quantity"
-                    min="0"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Quantity</label>
+                <input
+                  type="number"
+                  value={qty}
+                  onChange={(e) => setQty(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm"
+                  placeholder="Enter quantity"
+                  min="0"
+                />
+              </div>
 
-                {/* Date */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">Date</label>
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Date</label>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm"
+                />
+              </div>
 
-                {/* Add Button */}
-                <div className="pt-0">
-                  <button
-                    onClick={handleAdd}
-                    className="w-full bg-[#0616F9] text-white px-6 py-3 rounded-md hover:bg-blue-600 active:bg-blue-700 transition-colors font-medium text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm hover:shadow-md"
-                  >
-                    ADD ITEM
-                  </button>
-                </div>
+              <div>
+                <button
+                  onClick={handleAdd}
+                  className="w-full bg-[#0616F9] text-white px-6 py-3 rounded-md hover:bg-blue-600"
+                >
+                  ADD ITEM
+                </button>
               </div>
             </div>
 
             {/* Preview Section */}
             {(itemName || qty || date) && (
               <div className="mt-4 p-4 bg-gray-50 rounded-md border-l-4 border-blue-500">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Preview:</h3>
-                <div className="text-xs text-gray-600 space-y-1">
+                <h3 className="text-sm font-medium mb-2">Preview:</h3>
+                <div className="text-xs space-y-1">
                   {itemName && <div><span className="font-medium">Item Name:</span> {itemName}</div>}
                   {qty && <div><span className="font-medium">Quantity:</span> {qty}</div>}
                   {date && <div><span className="font-medium">Date:</span> {date}</div>}

@@ -2,13 +2,35 @@
 import { useState } from 'react';
 
 export default function InventoryPage() {
-  const [itemID, setItemID] = useState('');
+  const [id, setItemID] = useState('');
   const [qty, setQty] = useState('');
   const [date, setDate] = useState('');
 
-  const handleUpdate = () => {
-    console.log({ itemID, qty, date });
-    // Add your update logic here
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(`/api/inventory/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ qty, date }),
+      });
+
+      const data = await res.json();
+      alert(data.message || "Item updated successfully");
+
+      setItemID('');
+      setQty('');
+      setDate('');
+
+    } catch (error) {
+      console.error("Error:", error);
+      if (error.message.includes("Server returned")) {
+        alert("Server error. Please check if the backend is running.");
+      } else {
+        alert("Network error. Please check your connection and try again.");
+      }
+    }
   };
 
   return (
@@ -47,7 +69,7 @@ export default function InventoryPage() {
                     </label>
                     <input
                       type="text"
-                      value={itemID}
+                      value={id}
                       onChange={(e) => setItemID(e.target.value)}
                       className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter Item ID"
@@ -89,8 +111,7 @@ export default function InventoryPage() {
                     <div className="min-w-0 sm:min-w-[80px] lg:min-w-[100px]"></div>
                     <button
                       onClick={handleUpdate}
-                      className="w-full sm:flex-1 lg:w-60 bg-[#0616F9] text-white px-4 py-2 sm:py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
+                      className="w-full sm:flex-1 lg:w-60 bg-[#0616F9] text-white px-4 py-2 sm:py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                       Update
                     </button>
                   </div>
