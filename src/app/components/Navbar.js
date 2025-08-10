@@ -16,12 +16,12 @@ export default function Navbar() {
 
         <nav className="flex flex-col gap-2 px-4">
           <SidebarItem icon={<FaTachometerAlt />} label="Dashboard" href="/" active={pathname === "/"} />
-          <SidebarItem icon={<FaShoppingCart />} label="Orders" href="/Orders" active={pathname === "/Orders"} />
+          <SidebarItem icon={<FaShoppingCart />} label="Orders" href="/Orderlist" active={pathname === "/Orderlist"} />
           <SidebarDropdown
             icon={<FaFileAlt />}
             label="Reports"
             items={["Sales", "Purchasing", "Water Quality"]}
-            active={pathname.startsWith("/sales") || pathname.startsWith("/report") || pathname.startsWith("/waterquality")}
+            active={pathname.startsWith("/Sale") || pathname.startsWith("/report") || pathname.startsWith("/waterquality")}
           />
           <SidebarItem icon={<FaBoxes />} label="Inventory" href="/Inventory" active={pathname === "/Inventory"} />
           <SidebarItem icon={<FaCog />} label="Settings" href="/Settings" active={pathname === "/Settings"} />
@@ -62,7 +62,7 @@ function SidebarDropdown({ icon, label, items, active = false }) {
 
   // Map item names to route paths
   const routeMap = {
-    Sales: "/sales",
+    Sales: "/Sale",
     Purchasing: "/Report",
     "Water Quality": "/waterquality",
   };

@@ -11,7 +11,7 @@ export default function BasicTable() {
   React.useEffect(() => {
     async function fetchInventory() {
       try {
-        const response = await fetch('/api/inventory');
+        const response = await fetch('/api/inventory/table');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
