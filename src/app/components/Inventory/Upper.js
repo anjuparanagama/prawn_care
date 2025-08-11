@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function InventoryPage() {
   const [id, setItemID] = useState('');
   const [qty, setQty] = useState('');
   const [date, setDate] = useState('');
+  const [items, setItems] = useState([]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -33,6 +34,25 @@ export default function InventoryPage() {
     }
   };
 
+  useEffect(() => {
+    fetch("/api/inventory/items")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data && Array.isArray(data)) {
+        setItems(data);
+        if (data.length > 0) {
+          setItemID(data[0].id);
+        }
+      }
+    })
+    .catch((err) => console.log("Error fetching items:", err)); 
+  }, []);
+
+    const download = () => {
+      window.open("http://localhost:3000/api/inventory/downloadpdf", "_blank")
+      alert("Download succesfully")
+    };
+
   return (
     <div className="bg-gray-100 ">
       {/* Main content */}
@@ -40,7 +60,7 @@ export default function InventoryPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4">
           <h1 className="text-xl sm:text-2xl font-bold text-[#1C00B8]">Inventory</h1>
-          <button className="flex items-center gap-1 px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm hover:bg-gray-100 transition-colors">
+          <button onClick={download} className="flex items-center gap-1 px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm hover:bg-gray-100 transition-colors">
             <span>⬇</span>
             <span className="font-bold">Export</span>
           </button>
@@ -67,13 +87,21 @@ export default function InventoryPage() {
                     <label className="text-sm font-medium min-w-0 sm:min-w-[80px] lg:min-w-[100px]">
                       Item ID
                     </label>
-                    <input
-                      type="text"
+                    <select
                       value={id}
                       onChange={(e) => setItemID(e.target.value)}
                       className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter Item ID"
-                    />
+                    >
+                      {items.length === 0 ? (
+                        <option value="">Loading...</option>
+                      ) : (
+                        items.map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.id} - {item.item_name}
+                          </option>
+                        ))
+                      )}
+                    </select>
                   </div>
 
                   {/* Date */}
