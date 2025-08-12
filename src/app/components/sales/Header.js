@@ -7,7 +7,7 @@ function Header() {
   const [endDate, setEndDate] = useState("2025-05-08");
 
   return (
-    <div className="p-6 flex justify-between items-center">
+    <div className="px-6 py-3 flex justify-between items-center">
       <h2 className="text-2xl font-bold text-blue-600">Sales</h2>
       <div className="flex items-center gap-4">
         <input

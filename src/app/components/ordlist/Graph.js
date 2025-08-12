@@ -130,7 +130,7 @@ export default function Graph() {
   }, [view, startDate, endDate]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-6">
+    <div className="w-full max-w-[1175px] mx-auto mt-6">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="p-4">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0 sm:space-x-4">

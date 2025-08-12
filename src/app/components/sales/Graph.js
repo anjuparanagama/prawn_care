@@ -117,7 +117,7 @@ export default function Graph() {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
+    <div className="w-full mx-auto px-4 pb-3">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Metric Cards */}
         <div className="lg:col-span-1 space-y-4">

@@ -36,7 +36,7 @@ export default function Ordertable() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-3">
+    <div className="w-full mx-auto p-8 pt-8">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto">
