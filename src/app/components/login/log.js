@@ -1,7 +1,16 @@
-import React from 'react'
-import Image from 'next/image'
+"use client";
+
+import React from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    // Handle login logic here
+    router.push('/Dashboard');
+  };
+
   return (
     <div className="flex w-full bg-white ">
       <div className="illustration-container min-h-screen w-1/2 flex items-center justify-center ">
@@ -18,8 +27,8 @@ export default function Login() {
           <div className="space-y-1">
             <label htmlFor="email" className="block text-sm mb-3 font-medium text-gray-700">User ID</label>
             <input 
-              type="email" 
-              id="email" 
+              type="text" 
+              id="text" 
               placeholder="PFXXXXX" 
               className="input-field w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition"
               required
@@ -47,7 +56,8 @@ export default function Login() {
             <a href="#" className="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a>
           </div>
           <button 
-            type="submit" 
+            type="button" 
+            onClick={handleLogin}
             className="w-2/3 bg-[#4C64FF] text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
           >
             Sign In

@@ -4,7 +4,7 @@ import { WiThermometer } from "react-icons/wi";
 
 function Box() {
   return (
-    <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="p-2 grid grid-cols-1 -mt-5 md:grid-cols-3 gap-6">
       {/* Average pH */}
       <div className="bg-white p-4 rounded-lg shadow-md flex flex-row items-center gap-4">
         <GiChemicalDrop className=" text-3xl" />

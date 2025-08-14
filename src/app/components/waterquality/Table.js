@@ -46,7 +46,7 @@ function Table() {
             <th className="py-2 text-justify">NH₃ level</th>
           </tr>
         </thead>
-        <tbody className="shadow">
+        <tbody className="">
           {groupedData.map((group, groupIdx) => (
             <React.Fragment key={group.time}>
               {group.tanks.map((tank, tankIdx) => (
