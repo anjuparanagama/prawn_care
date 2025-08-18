@@ -1,15 +1,33 @@
 "use client";
 
 import React from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export default function Login() {
+  const [userID, setuserID] = useState("");
+  const [password, setpassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = () => {
-    // Handle login logic here
-    router.push('/Dashboard');
-  };
+  function handleLogin(event) {
+    event.preventDefault();
+    console.log("UserID:", userID);
+    console.log("Password:", password);
+    axios.post('/api/login/login', {
+      userid: userID,
+      password: password
+    })
+    .then(response => {
+      console.log("Login Success:", response.data);
+      // Redirect to dashboard after successful login
+      router.push('/Dashboard');
+    })
+    .catch(error => {
+      console.log("Login Error:", error.response?.data);
+      alert("Login Failed: " + (error.response?.data?.message || "Server Error"));
+    });
+  }
 
   return (
     <div className="flex w-full bg-white ">
@@ -30,6 +48,8 @@ export default function Login() {
               type="text" 
               id="text" 
               placeholder="PFXXXXX" 
+              value={userID}
+              onChange={(e) => setuserID(e.target.value)}
               className="input-field w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition"
               required
             />
@@ -40,6 +60,8 @@ export default function Login() {
               type="password" 
               id="password" 
               placeholder="••••••••" 
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
               className="input-field w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition"
               required
             />
