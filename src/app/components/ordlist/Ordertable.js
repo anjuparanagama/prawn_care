@@ -64,7 +64,7 @@ export default function OrderTable() {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="w-full max-w-6xl mx-auto p-3">
+        <div className="w-[1200px] mx-5 px-6 p-3">
             <Searchbar onFilter={handleFilter} />
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">

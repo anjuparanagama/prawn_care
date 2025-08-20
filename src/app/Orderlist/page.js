@@ -9,7 +9,7 @@ import Graph from '../components/ordlist/Graph';
   return (
     <div className="flex min-h-screen">
       <Navbar />
-      <div className="flex-grow flex flex-col p-4 ml-[250px]">
+      <div className="flex-grow flex flex-col p-4 ml-[230px]">
         <Header/>
         <Ordertable />
         <Graph />
