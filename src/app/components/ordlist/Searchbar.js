@@ -37,8 +37,8 @@ export default function Searchbar({ onFilter }) {
   };
 
   return (
-    <div className="w-full mx-auto px-8">
-      <div className="flex items-center space-x-4 mb-2">
+    <div className="w-full max-w-6xl mx-auto p-4">
+      <div className="flex items-center space-x-4 mb-6">
         <div className="relative flex-1">
           <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <FiSearch className="w-5 h-5" />

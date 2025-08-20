@@ -9,7 +9,6 @@ export default function Dashboard() {
       <main className="ml-64 w-full p-8">
         <Upper />
         <Bottom/>
-        <footer className="text-center text-sm text-black mt-10 font-bold ">Powered by Prawn Care</footer>
       </main>
     </div>
   );

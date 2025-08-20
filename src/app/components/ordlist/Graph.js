@@ -3,26 +3,29 @@
 import React, { useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 export default function Graph() {
   const [view, setView] = useState("Monthly");
-  const [startDate, setStartDate] = useState("2025-01-01");
-  const [endDate, setEndDate] = useState("2025-07-31");
   const [chartData, setChartData] = useState({
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: [],
     datasets: [
       {
-        label: new Date().getFullYear().toString(),
+        label: "Current Year",
         backgroundColor: "#3b82f6",
         borderColor: "#3b82f6",
-        data: [65, 78, 66, 44, 56, 67, 75],
+        data: [],
         fill: false,
         tension: 0.1,
       },
       {
-        label: (new Date().getFullYear() - 1).toString(),
+        label: "Previous Year",
         backgroundColor: "#e5e7eb",
         borderColor: "#e5e7eb",
-        data: [40, 68, 86, 74, 56, 60, 87],
+        data: [],
         fill: false,
         tension: 0.1,
       },
@@ -30,107 +33,192 @@ export default function Graph() {
   });
 
   useEffect(() => {
-    const dailyLabels = [
-      "2025-05-01", "2025-05-02", "2025-05-03", "2025-05-04",
-      "2025-05-05", "2025-05-06", "2025-05-07",
-    ];
-    const weeklyLabels = ["Week 1", "Week 2", "Week 3", "Week 4"];
-    const weeklyData2025 = [50, 60, 70, 75];
-    const weeklyData2024 = [45, 55, 65, 70];
-    const dailyData2025 = [10, 15, 12, 20, 18, 25, 22];
-    const dailyData2024 = [8, 12, 10, 15, 14, 20, 18];
+    const fetchData = async () => {
+      let url = '';
+      if (view === "Monthly") {
+        url = '/api/orders/orders/monthly';
+      } else if (view === "Weekly") {
+        url = '/api/orders/orders/weekly';
+      } else if (view === "Daily") {
+        url = '/api/orders/orders/daily';
+      }
 
-    let filteredLabels = [];
-    let filteredData2025 = [];
-    let filteredData2024 = [];
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(`${view} data:`, data);
 
-    if (view === "Monthly") {
-      filteredLabels = chartData.labels;
-      filteredData2025 = chartData.datasets[0].data;
-      filteredData2024 = chartData.datasets[1].data;
-    } else if (view === "Weekly") {
-      filteredLabels = weeklyLabels;
-      filteredData2025 = weeklyData2025;
-      filteredData2024 = weeklyData2024;
-    } else if (view === "Daily") {
-      filteredLabels = dailyLabels;
-      filteredData2025 = dailyData2025;
-      filteredData2024 = dailyData2024;
-    }
+        if (view === "Monthly") {
+          // Process monthly data only
+          const currentYearData = Array(12).fill(0);
+          const prevYearData = Array(12).fill(0);
+          
+          data.forEach(item => {
+            if (item.month) {
+              const monthIndex = parseInt(item.month.split('-')[1]) - 1;
+              if (item.year === new Date().getFullYear()) {
+                currentYearData[monthIndex] = item.total_quantity || 0;
+              } else if (item.year === new Date().getFullYear() - 1) {
+                prevYearData[monthIndex] = item.total_quantity || 0;
+              }
+            }
+          });
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+          setChartData({
+            labels: monthNames,
+            datasets: [
+              {
+                label: new Date().getFullYear().toString(),
+                backgroundColor: "#3b82f6",
+                borderColor: "#3b82f6",
+                data: currentYearData,
+                fill: false,
+                tension: 0.1,
+              },
+              {
+                label: (new Date().getFullYear() - 1).toString(),
+                backgroundColor: "#e5e7eb",
+                borderColor: "#e5e7eb",
+                data: prevYearData,
+                fill: false,
+                tension: 0.1,
+              },
+            ],
+          });
+        } else if (view === "Weekly") {
+          // Process weekly data only
+          const currentYear = new Date().getFullYear();
+          const currentYearWeeks = data.filter(item => item.year === currentYear);
+          const prevYearWeeks = data.filter(item => item.year === currentYear - 1);
+          
+          // Get all unique weeks for current year and sort them
+          const allWeeks = [...new Set(data.map(item => item.week))].sort((a, b) => a - b);
+          
+          const currentYearData = allWeeks.map(week => {
+            const weekData = currentYearWeeks.find(item => item.week === week);
+            return weekData ? weekData.total_quantity : 0;
+          });
+          
+          const prevYearData = allWeeks.map(week => {
+            const weekData = prevYearWeeks.find(item => item.week === week);
+            return weekData ? weekData.total_quantity : 0;
+          });
 
-    if (view === "Monthly") {
-      const monthMap = {
-        January: 0, February: 1, March: 2, April: 3,
-        May: 4, June: 5, July: 6,
-      };
-      filteredLabels = chartData.labels.filter((label) => {
-        const month = monthMap[label];
-        const date = new Date(2025, month, 1);
-        return date >= start && date <= end;
-      });
-      const startIndex = chartData.labels.indexOf(filteredLabels[0]);
-      const endIndex = chartData.labels.indexOf(filteredLabels[filteredLabels.length - 1]);
-      filteredData2025 = chartData.datasets[0].data.slice(startIndex, endIndex + 1);
-      filteredData2024 = chartData.datasets[1].data.slice(startIndex, endIndex + 1);
-    } else if (view === "Daily") {
-      filteredLabels = dailyLabels.filter((label) => {
-        const date = new Date(label);
-        return date >= start && date <= end;
-      });
-      const startIndex = dailyLabels.indexOf(filteredLabels[0]);
-      const endIndex = dailyLabels.indexOf(filteredLabels[filteredLabels.length - 1]);
-      filteredData2025 = dailyData2025.slice(startIndex, endIndex + 1);
-      filteredData2024 = dailyData2024.slice(startIndex, endIndex + 1);
-    }
+          const labels = allWeeks.map(week => `Week ${week}`);
+
+          setChartData({
+            labels,
+            datasets: [
+              {
+                label: new Date().getFullYear().toString(),
+                backgroundColor: "#3b82f6",
+                borderColor: "#3b82f6",
+                data: currentYearData,
+                fill: false,
+                tension: 0.1,
+              },
+              {
+                label: (new Date().getFullYear() - 1).toString(),
+                backgroundColor: "#e5e7eb",
+                borderColor: "#e5e7eb",
+                data: prevYearData,
+                fill: false,
+                tension: 0.1,
+              },
+            ],
+          });
+        } else if (view === "Daily") {
+          // Process daily data only
+          const currentYear = new Date().getFullYear();
+          const currentYearDays = data.filter(item => item.year === currentYear);
+          const prevYearDays = data.filter(item => item.year === currentYear - 1);
+          
+          // Get all unique days and sort them
+          const allDays = [...new Set(data.map(item => item.day))].sort();
+          
+          const currentYearData = allDays.map(day => {
+            const dayData = currentYearDays.find(item => item.day === day);
+            return dayData ? dayData.total_quantity : 0;
+          });
+          
+          const prevYearData = allDays.map(day => {
+            const dayData = prevYearDays.find(item => item.day === day);
+            return dayData ? dayData.total_quantity : 0;
+          });
+
+          setChartData({
+            labels: allDays,
+            datasets: [
+              {
+                label: new Date().getFullYear().toString(),
+                backgroundColor: "#3b82f6",
+                borderColor: "#3b82f6",
+                data: currentYearData,
+                fill: false,
+                tension: 0.1,
+              },
+              {
+                label: (new Date().getFullYear() - 1).toString(),
+                backgroundColor: "#e5e7eb",
+                borderColor: "#e5e7eb",
+                data: prevYearData,
+                fill: false,
+                tension: 0.1,
+              },
+            ],
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [view]);
+
+  useEffect(() => {
+    const ctx = document.getElementById("line-chart");
+    if (!ctx) return;
 
     const config = {
       type: "line",
-      data: {
-        labels: filteredLabels,
-        datasets: [
-          {
-            label: new Date().getFullYear().toString(),
-            backgroundColor: "#3b82f6",
-            borderColor: "#3b82f6",
-            data: filteredData2025,
-            fill: false,
-            tension: 0.1,
-          },
-          {
-            label: (new Date().getFullYear() - 1).toString(),
-            backgroundColor: "#e5e7eb",
-            borderColor: "#e5e7eb",
-            data: filteredData2024,
-            fill: false,
-            tension: 0.1,
-          },
-        ],
-      },
+      data: chartData,
       options: {
         maintainAspectRatio: false,
         responsive: true,
         plugins: {
-          legend: { labels: { color: "black" }, align: "end", position: "bottom" },
-          tooltip: { mode: "index", intersect: false },
+          legend: { 
+            labels: { color: "black" }, 
+            align: "end", 
+            position: "bottom" 
+          },
+          tooltip: { 
+            mode: "index", 
+            intersect: false 
+          },
         },
         scales: {
-          x: { ticks: { color: "rgba(0,0,0,0.7)" }, grid: { display: false } },
-          y: { ticks: { color: "rgba(0,0,0,0.7)" }, grid: { display: false } },
+          x: { 
+            ticks: { color: "rgba(0,0,0,0.7)" }, 
+            grid: { display: false } 
+          },
+          y: { 
+            ticks: { color: "rgba(0,0,0,0.7)" }, 
+            grid: { display: false },
+            beginAtZero: true,
+            suggestedMax: 200
+          },
         },
       },
     };
 
-    const ctx = document.getElementById("line-chart").getContext("2d");
     const myLine = new Chart(ctx, config);
 
     return () => myLine.destroy();
-  }, [view, startDate, endDate]);
+  }, [chartData]);
 
   return (
-    <div className="w-full max-w-[1175px] mx-auto mt-6">
+    <div className="w-full max-w-6xl mx-auto mt-6">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="p-4">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0 sm:space-x-4">
@@ -143,7 +231,6 @@ export default function Graph() {
               <option value="Weekly">Weekly</option>
               <option value="Daily">Daily</option>
             </select>
-            
           </div>
           <div className="relative w-full h-[360px]">
             <canvas id="line-chart"></canvas>

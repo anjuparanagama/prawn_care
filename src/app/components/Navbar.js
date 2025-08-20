@@ -18,7 +18,7 @@ export default function Navbar() {
           </h1>
 
           <nav className="flex flex-col gap-2 px-4">
-            <SidebarItem icon={<FaTachometerAlt />} label="Dashboard" href="/" active={pathname === "/"} />
+            <SidebarItem icon={<FaTachometerAlt />} label="Dashboard" href="/Dashboard" active={pathname === "/"} />
             <SidebarItem icon={<FaShoppingCart />} label="Orders" href="/Orderlist" active={pathname === "/Orderlist"} />
             <SidebarDropdown
               icon={<FaFileAlt />}
