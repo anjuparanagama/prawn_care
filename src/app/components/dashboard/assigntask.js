@@ -71,7 +71,7 @@ export default function Assigntask() {
                   {/* Item ID */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <label className="text-sm font-medium min-w-0 sm:min-w-[80px] lg:min-w-[100px]">
-                      Task ID
+                      Worker Details
                     </label>
                     <select
                       value={id}
@@ -116,7 +116,7 @@ export default function Assigntask() {
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}
                       className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter Quantity"
+                      placeholder="Add task details here"
                     />
                   </div>
 
