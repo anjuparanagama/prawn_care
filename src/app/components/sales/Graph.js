@@ -41,11 +41,11 @@ export default function Graph() {
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         // Ensure we have a valid number, default to 0 if not
-        setTotalRevenue(typeof data.totalRevenue === 'number' ? data.totalRevenue : 
+        setTotalRevenue(typeof data.totalRevenue === 'number' ? data.totalRevenue :
                       (data.totalRevenue !== null && data.totalRevenue !== undefined) ? parseFloat(data.totalRevenue) || 0 : 0);
       } catch (error) {
         console.error("Error fetching total revenue:", error);
-        setTotalRevenue(0); 
+        setTotalRevenue(0);
       }
     };
 
@@ -165,6 +165,8 @@ export default function Graph() {
                 drawBorder: false,
               },
               border: { display: false },
+              min: 0,
+              max: 5,
             },
           },
           interaction: {
@@ -212,7 +214,7 @@ export default function Graph() {
       {isLoading && (
           <div className="text-gray-500">Loading...</div>
       )}
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Metric Cards */}
         <div className="lg:col-span-1 space-y-4">

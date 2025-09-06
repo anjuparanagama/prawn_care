@@ -97,8 +97,8 @@ export default function InventoryPage() {
                         <option value="">Loading...</option>
                       ) : (
                         items.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.id} - {item.item_name}
+                          <option key={item.item_id} value={item.item_id}>
+                            {item.item_id} - {item.name}
                           </option>
                         ))
                       )}

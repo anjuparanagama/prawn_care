@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import Searchbar from "./Searchbar"; // Adjust the import path as necessary
 
 
-function createData(Order_ID, Customer, Date, Status, Amount, Quantity) {
-    return { Order_ID, Customer, Date, Status, Amount, Quantity };
+function createData(Order_ID, Customer, PrawnType, Status, Amount, Quantity) {
+    return { Order_ID, Customer, PrawnType, Status, Amount, Quantity };
 }
 
 export default function OrderTable() {
@@ -27,13 +27,13 @@ export default function OrderTable() {
                     throw new Error("Invalid data format received");
                 }
                 
-                const formattedData = data.map(order => 
+                const formattedData = data.map(order =>
                     createData(
-                        order.Order_ID || order.order_id, 
-                        order.Customer || order.customer, 
-                        order.Date || order.date, 
-                        order.Status || order.status, 
-                        order.Amount || order.amount, 
+                        order.Order_ID || order.order_id,
+                        order.Customer || order.customer,
+                        order.PrawnType || order.prawnType,
+                        order.Status || order.status,
+                        order.Amount || order.amount,
                         order.Quantity || order.quantity
                     )
                 );
@@ -78,7 +78,7 @@ export default function OrderTable() {
                                     Customer
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                                    DATE
+                                    PRAWN TYPE
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                                     STATUS
@@ -94,7 +94,7 @@ export default function OrderTable() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {filteredRows.map((row, index) => (
                                 <tr
-                                    key={row.Order_ID + index}
+                                    key={row.Order_ID ? String(row.Order_ID) : `fallback-${index}`}
                                     className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors duration-200`}
                                 >
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -104,7 +104,7 @@ export default function OrderTable() {
                                         {row.Customer}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {row.Date}
+                                        {row.PrawnType}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span

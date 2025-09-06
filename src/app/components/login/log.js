@@ -6,16 +6,16 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 export default function Login() {
-  const [userID, setuserID] = useState("");
+  const [userName, setuserName] = useState("");
   const [password, setpassword] = useState("");
   const router = useRouter();
 
   function handleLogin(event) {
     event.preventDefault();
-    console.log("UserID:", userID);
+    console.log("UserName:", userName);
     console.log("Password:", password);
     axios.post('/api/login/login', {
-      userid: userID,
+      userName: userName,
       password: password
     })
     .then(response => {
@@ -43,13 +43,13 @@ export default function Login() {
         <p className="text-gray-600 mb-8">Sign in to your account to continue</p>
         <form id="loginForm" className="space-y-6">
           <div className="space-y-1">
-            <label htmlFor="email" className="block text-sm mb-3 font-medium text-gray-700">User ID</label>
+            <label htmlFor="email" className="block text-sm mb-3 font-medium text-gray-700">User Name</label>
             <input 
               type="text" 
               id="text" 
-              placeholder="PFXXXXX" 
-              value={userID}
-              onChange={(e) => setuserID(e.target.value)}
+              placeholder="Enter User Name"
+              value={userName}
+              onChange={(e) => setuserName(e.target.value)}
               className="input-field w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition"
               required
             />
@@ -84,9 +84,6 @@ export default function Login() {
           >
             Sign In
           </button>
-          <div className="text-center text-sm text-gray-600 w-2/3">
-            <p>Don't have an account? <a href="/Signup" className="text-indigo-600 hover:text-indigo-500">Sign up</a></p>
-          </div>
         </form>
       </div>
     </div>

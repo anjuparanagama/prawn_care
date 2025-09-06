@@ -73,7 +73,7 @@ export default function Salestable() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredRows.map((row, index) => (
                 <tr
-                  key={row.Order_ID + index}
+                  key={row.Order_ID ? String(row.Order_ID) : `fallback-${index}`}
                   className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors duration-200`}
                 >
                   <td className="px-3 lg:px-6 py-4 text-sm font-medium text-gray-900">
@@ -123,7 +123,7 @@ export default function Salestable() {
           </div>
           <div className="divide-y divide-gray-200">
             {filteredRows.map((row, index) => (
-              <div key={row.Order_ID + index} className="p-4 hover:bg-gray-50">
+              <div key={row.Order_ID ? String(row.Order_ID) : `fallback-${index}`} className="p-4 hover:bg-gray-50">
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-gray-900">

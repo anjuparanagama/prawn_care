@@ -95,7 +95,7 @@ export default function CardLineChart() {
           },
           y: {
             min: 0,
-            max: 200000,
+            max: 1000000,
             ticks: { color: "#6b7280", stepSize: 50000 },
             grid: {
               color: "#e5e7eb",

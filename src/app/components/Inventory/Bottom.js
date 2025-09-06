@@ -51,7 +51,7 @@ export default function BasicTable() {
           <tbody className="divide-y divide-gray-200">
             {displayedRows.map((row, index) => (
               <tr key={row.itemID || row.id || index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="px-4 py-3 text-sm font-medium text-gray-900">{row.itemID || row.inventory_id}</td>
+                <td className="px-4 py-3 text-sm font-medium text-gray-900">{row.itemID || row.item_id}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{row.itemName || row.name}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{row.Quantity || row.quantity}</td>
               </tr>
