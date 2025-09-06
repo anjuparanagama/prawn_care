@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { FaRegCalendarAlt, FaDownload } from "react-icons/fa";
 import { FiDownload } from "react-icons/fi";
 import { jsPDF } from "jspdf";
 
@@ -39,8 +40,8 @@ function Header() {
   };
 
   return (
-    <div className="p-6 flex justify-between items-center">
-      <h2 className="text-2xl font-bold text-blue-600">Sales</h2>
+    <div className="pt-6 px-4 flex justify-between items-center">
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1C00B8]">Sales</h2>
       <div className="flex items-center gap-4">
         <input
           type="date"
@@ -56,13 +57,11 @@ function Header() {
           className="border rounded px-2 py-1 text-black"
         />
         <button 
-          type="button" 
-          className="border rounded text-black px-2 py-1 flex items-center cursor-pointer hover:bg-gray-50 transition-colors"
-          onClick={handleDownloadReport} // Call the download function on click
-        >
-          <FiDownload className="mr-2" />
-          Export
-        </button>
+              onClick={handleDownloadReport}
+              className="border border-gray-300 px-3 py-2 rounded-md text-xs sm:text-sm flex items-center gap-2 shadow-sm hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200">
+            <FaDownload className="text-gray-600 text-xs sm:text-sm" />
+            <span className="font-medium">Export</span>
+          </button>
       </div>
     </div>
   );

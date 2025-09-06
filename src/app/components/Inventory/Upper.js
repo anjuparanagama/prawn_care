@@ -49,26 +49,27 @@ export default function InventoryPage() {
   }, []);
 
     const download = () => {
-      window.open("http://localhost:3000/api/inventory/downloadpdf", "_blank")
+      window.open("http://localhost:5000/api/inventory/downloadpdf", "_blank")
       alert("Download succesfully")
     };
 
   return (
-    <div className="bg-gray-100 ">
+    <div className="bg-white">
       {/* Main content */}
-      <div className="w-full p-3 sm:p-4 md:p-6 bg-gray-50">
+      <div className="w-full p-3 sm:p-4 md:p-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4">
-          <h1 className="text-xl sm:text-2xl font-bold text-[#1C00B8]">Inventory</h1>
-          <button onClick={download} className="flex items-center gap-1 px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm hover:bg-gray-100 transition-colors">
+          <h1 className="text-2xl font-bold text-[#1C00B8]">Inventory</h1>
+          <button onClick={download} className="flex items-center gap-1 px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-gray-100 transition-colors">
+            <p>Download Inventory report : </p>
             <span>⬇</span>
-            <span className="font-bold">Export</span>
+            <span>Export</span>
           </button>
         </div>
 
         {/* Update Items Header */}
         <div className="bg-[#DDE6FF] rounded-md p-3 mb-4">
-          <h2 className="text-center text-[#0019FA] italic text-sm font-medium sm:text-base">Update Items</h2>
+          <h2 className="text-center text-blue-900 italic text-sm font-medium sm:text-base">Update Items</h2>
         </div>
 
         {/* Form Container */}
@@ -90,7 +91,7 @@ export default function InventoryPage() {
                     <select
                       value={id}
                       onChange={(e) => setItemID(e.target.value)}
-                      className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-gray-200 focus:border-transparent"
                     >
                       {items.length === 0 ? (
                         <option value="">Loading...</option>
@@ -113,7 +114,7 @@ export default function InventoryPage() {
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
-                      className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-gray-200 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -129,7 +130,7 @@ export default function InventoryPage() {
                       type="number"
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}
-                      className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-gray-200 focus:border-transparent"
                       placeholder="Enter Quantity"
                     />
                   </div>
@@ -139,7 +140,7 @@ export default function InventoryPage() {
                     <div className="min-w-0 sm:min-w-[80px] lg:min-w-[100px]"></div>
                     <button
                       onClick={handleUpdate}
-                      className="w-full sm:flex-1 lg:w-60 bg-[#0616F9] text-white px-4 py-2 sm:py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                      className="w-full bg-[#0616F9] text-white font-medium text-sm px-6 py-3 rounded-md hover:bg-blue-600">
                       Update
                     </button>
                   </div>

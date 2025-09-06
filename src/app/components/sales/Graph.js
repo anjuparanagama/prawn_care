@@ -208,11 +208,9 @@ export default function Graph() {
   const safeSales = totalSales || 0;
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
+    <div className="w-full mx-auto px-4">
       {isLoading && (
-        <div className="flex justify-center items-center py-8">
           <div className="text-gray-500">Loading...</div>
-        </div>
       )}
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

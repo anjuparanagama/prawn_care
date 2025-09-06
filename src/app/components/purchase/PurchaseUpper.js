@@ -40,7 +40,7 @@ export default function PurchasingPage() {
   };
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+    <div className="p-3 sm:p-4 md:p-6 lg:p-8 mx-auto w-full">
       {/* Header with buttons on the right */}
       <div className="flex justify-between items-center mb-4 sm:mb-6 lg:mb-8">
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1C00B8]">Purchasing</h1>

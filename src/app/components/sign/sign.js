@@ -30,7 +30,7 @@ export default function Sign() {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/api/register', {
+            const response = await axios.post('http://localhost:5000/api/register', {
                 serviceId: formData.serviceId,
                 email: formData.email,
                 password: formData.password,

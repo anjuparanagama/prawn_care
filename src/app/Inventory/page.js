@@ -10,7 +10,7 @@ export default function Home() {
       <Navbar />
 
       {/* Main content area on the right (stacked vertically) */}
-      <div className="flex-grow flex flex-col p-6 gap-6 ml-[250px] ">
+      <div className="flex-grow flex flex-col p-4 py-0 gap-6 ml-[250px] ">
         <Upper />
         <MiddleOne />
         <Bottom/>

@@ -37,7 +37,7 @@ export default function BasicTable() {
   const displayedRows = showAll ? rows : rows.slice(0, 5);
 
   return (
-    <div className="w-full p-3 sm:p-4 md:p-6 bg-gray-50">
+    <div className="w-full p-3 sm:p-4 md:p-6">
       {/* Universal Table for All Devices */}
       <div className="bg-white rounded-lg shadow-sm overflow-auto">
         <table className="w-full min-w-[600px]">

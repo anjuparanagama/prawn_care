@@ -57,10 +57,10 @@ export default function AddInventory() {
   };
 
   return (
-    <div className="bg-gray-100 ">
-      <div className="w-full p-3 sm:p-4 md:p-6 bg-gray-50">
+    <div className="bg-white ">
+      <div className="w-full p-3 sm:p-4 md:p-6">
         <div className="bg-blue-100 rounded-md p-3 mb-2 sm:mb-3">
-          <h2 className="text-center text-[#0019FA] italic text-sm sm:text-base font-medium">
+          <h2 className="text-center text-blue-900 italic text-sm sm:text-base font-medium">
             New Items
           </h2>
         </div>
@@ -153,14 +153,14 @@ export default function AddInventory() {
                 />
               </div>
 
-              <div>
-                <button
-                  onClick={handleAdd}
-                  className="w-full bg-[#0616F9] text-white px-6 py-3 rounded-md hover:bg-blue-600"
-                >
-                  ADD ITEM
-                </button>
-              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <div className="min-w-0 sm:min-w-[80px] lg:min-w-[100px]"></div>
+                    <button
+                      onClick={handleAdd}
+                      className="w-full bg-[#0616F9] text-white font-medium text-sm px-6 py-3 rounded-md hover:bg-blue-600">
+                      Add Item
+                    </button>
+                  </div>
             </div>
 
             {/* Preview Section */}
