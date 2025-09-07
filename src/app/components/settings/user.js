@@ -1,77 +1,60 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, X } from 'lucide-react';
 
+const API_BASE_URL = '/api/settings/registered-workers';
+
 export default function User() {
-  const [users, setUsers] = useState([
-    {
-      userId: '01',
-      serviceId: '01',
-      userName: 'John',
-      email: 'John@gmail.com',
-      mobileNo: '0771457893',
-      approved: null // null = pending, true = approved, false = rejected
-    }
-  ]);
+  const [users, setUsers] = useState([]);
 
   // Status history for the third table
-  const [statusHistory, setStatusHistory] = useState([
-    {
-      userId: '01',
-      serviceId: '01',
-      userName: 'John',
-      email: 'John@gmail.com',
-      mobileNo: '0771457893',
-      status: 'Approved'
-    },
-    {
-      userId: '01',
-      serviceId: '01',
-      userName: 'John',
-      email: 'John@gmail.com',
-      mobileNo: '0771457893',
-      status: 'Rejected'
-    },
-    {
-      userId: '01',
-      serviceId: '01',
-      userName: 'John',
-      email: 'John@gmail.com',
-      mobileNo: '0771457893',
-      status: 'Approved'
-    }
-  ]);
+  const [statusHistory, setStatusHistory] = useState([]);
 
   const [formData, setFormData] = useState({
-    serviceId: '',
     userName: '',
     email: '',
     mobileNo: '',
     password: ''
   });
 
-  const handleApproval = (userId, status) => {
-    setUsers(users.map(user => 
-      user.userId === userId 
-        ? { ...user, approved: status }
-        : user
-    ));
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
-    // Add to status history when approval changes
-    const user = users.find(u => u.userId === userId);
-    if (user) {
-      const newStatusEntry = {
-        userId: user.userId,
-        serviceId: user.serviceId,
-        userName: user.userName,
-        email: user.email,
-        mobileNo: user.mobileNo,
-        status: status ? 'Approved' : 'Rejected'
-      };
-      setStatusHistory([...statusHistory, newStatusEntry]);
-    }
-  };
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [tableLoading, setTableLoading] = useState(true);
+  const [tableError, setTableError] = useState('');
+
+  // Fetch registered workers on component mount
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        setTableLoading(true);
+        setTableError('');
+        const response = await fetch(API_BASE_URL);
+        if (!response.ok) {
+          throw new Error('Failed to fetch workers');
+        }
+        const data = await response.json();
+        // Transform data to match the expected format
+        const transformedData = data.map((worker, index) => ({
+          userId: String(worker.id).padStart(2, '0'),
+          userName: worker.name,
+          email: worker.email,
+          mobileNo: worker.workerDetails || worker.mobile_no
+        }));
+        setStatusHistory(transformedData);
+      } catch (err) {
+        setTableError('Failed to load user data');
+        console.error('Error fetching workers:', err);
+      } finally {
+        setTableLoading(false);
+      }
+    };
+
+    fetchWorkers();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -81,24 +64,60 @@ export default function User() {
     }));
   };
 
-  const handleAddUser = () => {
-    if (formData.serviceId && formData.userName && formData.email && formData.mobileNo && formData.password) {
-      const newUser = {
-        userId: String(users.length + 1).padStart(2, '0'),
-        serviceId: formData.serviceId,
-        userName: formData.userName,
-        email: formData.email,
-        mobileNo: formData.mobileNo,
-        approved: null
-      };
-      setUsers([...users, newUser]);
-      setFormData({
-        serviceId: '',
-        userName: '',
-        email: '',
-        mobileNo: '',
-        password: ''
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(prev => !prev);
+  };
+
+  const handleAddUser = async () => {
+    if (!formData.userName || !formData.email || !formData.mobileNo || !formData.password) {
+      setError('All fields are required');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const response = await fetch(`/api/signup/register-worker`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.userName,
+          email: formData.email,
+          password: formData.password,
+          mobile_no: formData.mobileNo,
+        }),
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('Worker registered successfully!');
+        // Add to statusHistory for immediate UI update
+        const newUser = {
+          userId: String(statusHistory.length + 1).padStart(2, '0'),
+          userName: formData.userName,
+          email: formData.email,
+          mobileNo: formData.mobileNo,
+        };
+        setStatusHistory([...statusHistory, newUser]);
+        setFormData({
+          userName: '',
+          email: '',
+          mobileNo: '',
+          password: ''
+        });
+        setPasswordVisible(false);
+      } else {
+        setError(data.message || 'Failed to register worker');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,43 +140,53 @@ export default function User() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <label className="text-sm font-medium text-gray-700 w-24">Service ID</label>
+                    <label className="text-sm font-medium text-gray-700 w-24">User Name</label>
                     <input
                       type="text"
-                      name="serviceId"
-                      value={formData.serviceId}
+                      name="userName"
+                      value={formData.userName}
                       onChange={handleInputChange}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
+                  <div className="flex items-center gap-4 relative">
+                    <label className="text-sm font-medium text-gray-700 w-24">Password</label>
+                    <input
+                      type={passwordVisible ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      aria-label={passwordVisible ? "Hide password" : "Show password"}
+                    >
+                      {passwordVisible ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.96 9.96 0 012.175-6.125M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  {error && <p className="text-red-500 text-center text-sm mt-2 pt-3">{error}</p>}
+                  {success && <p className="text-green-500 text-center text-sm mt-2 pt-3">{success}</p>}
+                </div>
+                <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <label className="text-sm font-medium text-gray-700 w-24">E-Mail</label>
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
-                      onChange={handleInputChange}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <label className="text-sm font-medium text-gray-700 w-24">Password</label>
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <label className="text-sm font-medium text-gray-700 w-24">User Name</label>
-                    <input
-                      type="text"
-                      name="userName"
-                      value={formData.userName}
                       onChange={handleInputChange}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -175,9 +204,10 @@ export default function User() {
                   <div className="flex justify-end">
                     <button
                       onClick={handleAddUser}
-                      className="px-8 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      disabled={loading}
+                      className="px-8 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      ADD
+                      {loading ? 'Registering...' : 'ADD'}
                     </button>
                   </div>
                 </div>
@@ -191,34 +221,38 @@ export default function User() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             {/* Header */}
             <div className="bg-blue-100 border-b border-gray-200">
-              <div className="grid grid-cols-6 gap-4 px-6 py-3 text-sm font-medium text-gray-700">
+              <div className="grid grid-cols-4 gap-4 px-6 py-3 text-sm font-medium text-gray-700">
                 <div>User ID</div>
-                <div>Service ID</div>
                 <div>User Name</div>
                 <div>E-Mail</div>
                 <div>Mobile No</div>
-                <div>Status</div>
               </div>
             </div>
 
-            {/* Table Body - Only first entry */}
+            {/* Table Body */}
             <div className="divide-y divide-gray-200">
-              <div className="grid grid-cols-6 gap-4 px-6 py-3 text-sm text-gray-900 hover:bg-gray-50 transition-colors">
-                <div className="font-medium">{statusHistory[0]?.userId}</div>
-                <div>{statusHistory[0]?.serviceId}</div>
-                <div>{statusHistory[0]?.userName}</div>
-                <div className="text-blue-600">{statusHistory[0]?.email}</div>
-                <div>{statusHistory[0]?.mobileNo}</div>
-                <div>
-                  <span className={`font-medium ${
-                    statusHistory[0]?.status === 'Approved' 
-                      ? 'text-green-600' 
-                      : 'text-red-500'
-                  }`}>
-                    {statusHistory[0]?.status}
-                  </span>
+              {tableLoading ? (
+                <div className="px-6 py-8 text-center text-gray-500">
+                  Loading users...
                 </div>
-              </div>
+              ) : tableError ? (
+                <div className="px-6 py-8 text-center text-red-500">
+                  {tableError}
+                </div>
+              ) : statusHistory.length === 0 ? (
+                <div className="px-6 py-8 text-center text-gray-500">
+                  No users found
+                </div>
+              ) : (
+                statusHistory.map((user, index) => (
+                  <div key={user.userId || index} className="grid grid-cols-4 gap-4 px-6 py-3 text-sm text-gray-900 hover:bg-gray-50 transition-colors">
+                    <div className="font-medium">{user.userId}</div>
+                    <div>{user.userName}</div>
+                    <div className="text-blue-600">{user.email}</div>
+                    <div>{user.mobileNo}</div>
+                  </div>
+                ))
+              )}
             </div>
             
             {/* See All Button */}
@@ -229,7 +263,7 @@ export default function User() {
             </div>
           </div>
         </div>
-              </div>
+        </div>
       </div>
     </div>
   );
