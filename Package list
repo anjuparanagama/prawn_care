@@ -1,0 +1,2 @@
+npm install axios chart.js date-fns jspdf jspdf-autotable lucide-react next react react-dom react-date-range react-icons
+npm install --save-dev tailwindcss @tailwindcss/postcss
