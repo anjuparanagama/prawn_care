@@ -38,16 +38,16 @@ export const PurchaseBottom = () => {
         <thead>
           <tr className="bg-blue-200 text-left">
             <th className="px-4 py-2">Purch. ID</th>
-            <th className="px-4 py-2">Item name</th>
+            <th className="px-4 py-2">ITEM NAME</th>
             <th className="px-4 py-2">DATE</th>
-            <th className="px-4 py-2">SUPPlier</th>
-            <th className="px-4 py-2">Quantity</th>
-            <th className="px-4 py-2">Price</th>
+            <th className="px-4 py-2">SUPPLIER</th>
+            <th className="px-4 py-2">QUANTITY</th>
+            <th className="px-4 py-2">PRICE</th>
           </tr>
         </thead>
         <tbody className="bg-white">
           {purchaseData.map((row, idx) => (
-            <tr key={idx} className="border-t">
+            <tr key={idx} className="">
               {row.map((cell, i) => (
                 <td key={i} className="px-4 py-2">
                   {i === 4 ? <strong>{cell}</strong> : cell}

@@ -75,6 +75,26 @@ export default function PurchasingPage() {
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      const startDate = format(range[0].startDate, "yyyy-MM-dd");
+      const endDate = format(range[0].endDate, "yyyy-MM-dd");
+      const res = await fetch(`/api/purchase/downloadpdf?start=${startDate}&end=${endDate}`);
+      if (!res.ok) throw new Error("Failed to download PDF");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Purchase-orders.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert("Error downloading PDF: " + error.message);
+    }
+  };
+
   return (
     <div className="p-3 sm:p-4 md:p-6 lg:p-8 mx-auto w-full">
       {/* Header with buttons on the right */}
@@ -88,9 +108,11 @@ export default function PurchasingPage() {
             <FaRegCalendarAlt className="text-gray-600 text-xs sm:text-sm" />
             <span className="font-medium">{formattedRange}</span>
           </button>
-          <button className="border border-gray-300 px-3 py-2 rounded-md text-xs sm:text-sm flex items-center gap-2 shadow-sm hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200">
+          <button
+              onClick={handleDownload}
+              className="border border-gray-300 px-3 py-2 rounded-md text-xs sm:text-sm flex items-center gap-2 shadow-sm hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200">
             <FaDownload className="text-gray-600 text-xs sm:text-sm" />
-            <span className="font-medium">Export</span>
+            <span className="font-medium">Download PDF</span>
           </button>
         </div>
       </div>
