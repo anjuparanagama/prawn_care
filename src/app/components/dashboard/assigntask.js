@@ -3,26 +3,26 @@ import { useState, useEffect } from 'react';
 
 export default function Assigntask() {
   const [id, setItemID] = useState('');
-  const [qty, setQty] = useState('');
-  const [date, setDate] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [items, setItems] = useState([]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`/api/inventory/update/${id}`, {
+      const res = await fetch(`/api/dashboard/assign-task/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qty, date }),
+        body: JSON.stringify({ title, description }),
       });
 
       const data = await res.json();
-      alert(data.message || "Item updated successfully");
+      alert(data.message || "Task assigned successfully!");
 
       setItemID('');
-      setQty('');
-      setDate('');
+      setTitle('');
+      setDescription('');
 
     } catch (error) {
       console.error("Error:", error);
@@ -35,7 +35,7 @@ export default function Assigntask() {
   };
 
   useEffect(() => {
-    fetch("/api/inventory/items")
+    fetch("/api/dashboard/getworkerdetails")
     .then((res) => res.json())
     .then((data) => {
       if (data && Array.isArray(data)) {
@@ -83,7 +83,7 @@ export default function Assigntask() {
                       ) : (
                         items.map((item) => (
                           <option key={item.id} value={item.id}>
-                            {item.id} - {item.item_name}
+                            {item.id} - {item.name}
                           </option>
                         ))
                       )}
@@ -93,12 +93,12 @@ export default function Assigntask() {
                   {/* Date */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <label className="text-sm font-medium min-w-0 sm:min-w-[80px] lg:min-w-[100px]">
-                      Date
+                      Description
                     </label>
                     <input
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
+                      type="string"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                       className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
@@ -109,12 +109,12 @@ export default function Assigntask() {
                   {/* Quantity */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <label className="text-sm font-medium min-w-0 sm:min-w-[80px] lg:min-w-[100px]">
-                      Task Description
+                      Title
                     </label>
                     <input
-                      type="number"
-                      value={qty}
-                      onChange={(e) => setQty(e.target.value)}
+                      type="string"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
                       className="w-full sm:flex-1 lg:w-60 border rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Add task details here"
                     />

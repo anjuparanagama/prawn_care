@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaRegCalendarAlt, FaDownload } from "react-icons/fa";
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
@@ -24,19 +24,55 @@ export default function PurchasingPage() {
   )}`;
 
   const [formData, setFormData] = useState({
-    itemId: "",
-    seller: "",
-    date: "",
+    item_id: "",
+    supplier_id: "",
     price: "",
     quantity: "",
   });
+
+  const [items, setItems] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleUpdate = () => {
-    console.log("Updating purchase data:", formData);
+  useEffect(() => {
+    fetch("/api/inventory/items")
+      .then((res) => res.json())
+      .then((data) => setItems(data))
+      .catch((err) => console.log("Error fetching items:", err));
+
+    fetch("/api/purchase/supplier-details")
+      .then((res) => res.json())
+      .then((data) => setSuppliers(data))
+      .catch((err) => console.log("Error fetching suppliers:", err));
+  }, []);
+
+  const handleUpdate = async () => {
+    try {
+      const res = await fetch("/api/purchase/purchase-item-add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || "Purchase item added successfully!");
+        setFormData({
+          item_id: "",
+          supplier_id: "",
+          price: "",
+          quantity: "",
+        });
+      } else {
+        alert(data.error || "Error adding purchase item");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Network error. Please check your connection and try again.");
+    }
   };
 
   return (
@@ -80,25 +116,20 @@ export default function PurchasingPage() {
           {/* Left column */}
           <div className="flex flex-col gap-3 sm:gap-4">
             <div className="flex flex-col gap-1 sm:gap-2">
-              <label className="text-xs sm:text-sm font-medium text-gray-700">Item ID</label>
-              <input
-                type="text"
-                name="itemId"
-                value={formData.itemId}
+              <label className="text-xs sm:text-sm font-medium text-gray-700">Item</label>
+              <select
+                name="item_id"
+                value={formData.item_id}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter item ID"
-              />
-            </div>
-            <div className="flex flex-col gap-1 sm:gap-2">
-              <label className="text-xs sm:text-sm font-medium text-gray-700">Date</label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+              >
+                <option value="">Select Item</option>
+                {items.map((item) => (
+                  <option key={item.item_id} value={item.item_id}>
+                    {item.item_id} - {item.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="flex flex-col gap-1 sm:gap-2">
               <label className="text-xs sm:text-sm font-medium text-gray-700">Quantity</label>
@@ -116,15 +147,20 @@ export default function PurchasingPage() {
           {/* Right column */}
           <div className="flex flex-col gap-3 sm:gap-4">
             <div className="flex flex-col gap-1 sm:gap-2">
-              <label className="text-xs sm:text-sm font-medium text-gray-700">Seller</label>
-              <input
-                type="text"
-                name="seller"
-                value={formData.seller}
+              <label className="text-xs sm:text-sm font-medium text-gray-700">Supplier</label>
+              <select
+                name="supplier_id"
+                value={formData.supplier_id}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter seller name"
-              />
+              >
+                <option value="">Select Supplier</option>
+                {suppliers.map((supplier) => (
+                  <option key={supplier.supplier_id} value={supplier.supplier_id}>
+                    {supplier.supplier_id} - {supplier.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="flex flex-col gap-1 sm:gap-2">
               <label className="text-xs sm:text-sm font-medium text-gray-700">Price</label>
