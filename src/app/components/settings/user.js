@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, X, Edit, Trash2 } from 'lucide-react';
 
 const API_BASE_URL = '/api/settings/registered-workers';
 
@@ -25,6 +25,13 @@ export default function User() {
   const [success, setSuccess] = useState('');
   const [tableLoading, setTableLoading] = useState(true);
   const [tableError, setTableError] = useState('');
+
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    userName: '',
+    email: '',
+    mobileNo: ''
+  });
 
   // Fetch registered workers on component mount
   useEffect(() => {
@@ -118,6 +125,83 @@ export default function User() {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEdit = (user) => {
+    setEditingUserId(user.userId);
+    setEditFormData({
+      userName: user.userName,
+      email: user.email,
+      mobileNo: user.mobileNo
+    });
+  };
+
+  const handleSave = async () => {
+    if (!editFormData.userName || !editFormData.email || !editFormData.mobileNo) {
+      alert('All fields are required');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/${editingUserId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: editFormData.userName,
+          email: editFormData.email,
+          mobile_no: editFormData.mobileNo,
+        }),
+      });
+
+      if (response.ok) {
+        // Update the local state
+        setStatusHistory(prev => prev.map(user =>
+          user.userId === editingUserId
+            ? { ...user, userName: editFormData.userName, email: editFormData.email, mobileNo: editFormData.mobileNo }
+            : user
+        ));
+        setEditingUserId(null);
+        setEditFormData({ userName: '', email: '', mobileNo: '' });
+      } else {
+        alert('Failed to update user');
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingUserId(null);
+    setEditFormData({ userName: '', email: '', mobileNo: '' });
+  };
+
+  const handleDelete = async (userId) => {
+    if (!confirm('Are you sure you want to delete this user?')) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Remove from local state
+        setStatusHistory(prev => prev.filter(user => user.userId !== userId));
+      } else {
+        alert('Failed to delete user');
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
     }
   };
 
@@ -221,11 +305,12 @@ export default function User() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             {/* Header */}
             <div className="bg-blue-100 border-b border-gray-200">
-              <div className="grid grid-cols-4 gap-4 px-6 py-3 text-sm font-medium text-gray-700">
+              <div className="grid grid-cols-5 gap-4 px-6 py-3 text-sm font-medium text-gray-700">
                 <div>User ID</div>
                 <div>User Name</div>
                 <div>E-Mail</div>
                 <div>Mobile No</div>
+                <div>Actions</div>
               </div>
             </div>
 
@@ -245,11 +330,84 @@ export default function User() {
                 </div>
               ) : (
                 statusHistory.map((user, index) => (
-                  <div key={user.userId || index} className="grid grid-cols-4 gap-4 px-6 py-3 text-sm text-gray-900 hover:bg-gray-50 transition-colors">
+                  <div key={user.userId || index} className="grid grid-cols-5 gap-4 px-6 py-3 text-sm text-gray-900 hover:bg-gray-50 transition-colors">
                     <div className="font-medium">{user.userId}</div>
-                    <div>{user.userName}</div>
-                    <div className="text-blue-600">{user.email}</div>
-                    <div>{user.mobileNo}</div>
+                    <div>
+                      {editingUserId === user.userId ? (
+                        <input
+                          type="text"
+                          name="userName"
+                          value={editFormData.userName}
+                          onChange={handleEditInputChange}
+                          className="w-full px-2 py-1 border border-gray-300 rounded-md"
+                        />
+                      ) : (
+                        user.userName
+                      )}
+                    </div>
+                    <div>
+                      {editingUserId === user.userId ? (
+                        <input
+                          type="email"
+                          name="email"
+                          value={editFormData.email}
+                          onChange={handleEditInputChange}
+                          className="w-full px-2 py-1 border border-gray-300 rounded-md"
+                        />
+                      ) : (
+                        <span className="text-blue-600">{user.email}</span>
+                      )}
+                    </div>
+                    <div>
+                      {editingUserId === user.userId ? (
+                        <input
+                          type="tel"
+                          name="mobileNo"
+                          value={editFormData.mobileNo}
+                          onChange={handleEditInputChange}
+                          className="w-full px-2 py-1 border border-gray-300 rounded-md"
+                        />
+                      ) : (
+                        user.mobileNo
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {editingUserId === user.userId ? (
+                        <>
+                          <button
+                            onClick={handleSave}
+                            className="text-green-600 hover:text-green-800"
+                            title="Save"
+                          >
+                            <Check />
+                          </button>
+                          <button
+                            onClick={handleCancel}
+                            className="text-red-600 hover:text-red-800"
+                            title="Cancel"
+                          >
+                            <X />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleEdit(user)}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="Edit"
+                          >
+                            <Edit />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(user.userId)}
+                            className="text-red-600 hover:text-red-800"
+                            title="Delete"
+                          >
+                            <Trash2 />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 ))
               )}

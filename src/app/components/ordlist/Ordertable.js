@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Searchbar from "./Searchbar"; // Adjust the import path as necessary
 
 
@@ -8,6 +9,7 @@ function createData(Order_ID, Customer, PrawnType, Status, Amount, Quantity) {
 }
 
 export default function OrderTable() {
+    const router = useRouter();
     const [rows, setRows] = useState([]); // Initialize as an empty array
     const [filteredRows, setFilteredRows] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ export default function OrderTable() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await fetch("/api/orders/order");
+                const response = await fetch("/api/orders/order-table");
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -52,12 +54,16 @@ export default function OrderTable() {
 
     const handleFilter = ({ searchTerm, selectedStatus }) => {
         const filtered = rows.filter((row) => {
-            const matchesSearchTerm = row.Customer.toLowerCase().includes(searchTerm.toLowerCase()) || 
+            const matchesSearchTerm = row.Customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                       row.Order_ID.toString().includes(searchTerm);
             const matchesStatus = selectedStatus ? row.Status === selectedStatus : true;
             return matchesSearchTerm && matchesStatus;
         });
         setFilteredRows(filtered);
+    };
+
+    const handleRowClick = (orderId) => {
+        router.push(`/Orders/${orderId}`);
     };
 
     if (loading) return <div>Loading...</div>;
@@ -95,7 +101,8 @@ export default function OrderTable() {
                             {filteredRows.map((row, index) => (
                                 <tr
                                     key={row.Order_ID ? String(row.Order_ID) : `fallback-${index}`}
-                                    className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors duration-200`}
+                                    className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition-colors duration-200 cursor-pointer`}
+                                    onClick={() => handleRowClick(row.Order_ID)}
                                 >
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {row.Order_ID}
