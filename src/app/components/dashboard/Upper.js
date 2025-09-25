@@ -66,7 +66,6 @@ export default function DashboardCards() {
         </div>
         <div className="flex items-center justify-between">
           <p className="text-xl font-bold">{totalRevenue}</p>
-          <span className="text-xs text-blue-500">+{revenueChange.toFixed(2)}%</span>
         </div>
       </div>
 
@@ -78,7 +77,6 @@ export default function DashboardCards() {
         </div>
         <div className="flex items-center justify-between">
           <p className="text-xl font-bold">{newOrders}</p>
-          <span className="text-xs text-green-500">+{ordersChange.toFixed(2)}%</span>
         </div>
       </div>
 
@@ -90,7 +88,6 @@ export default function DashboardCards() {
         </div>
         <div className="flex items-center justify-between"> 
           <p className="text-xl font-bold">{lowStockItems}</p>
-          <span className="text-xs text-red-500">{stockChange} items</span>
         </div>
       </div>
     </div>

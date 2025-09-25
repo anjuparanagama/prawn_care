@@ -33,35 +33,41 @@ export default function User() {
     mobileNo: ''
   });
 
+  // Function to fetch registered workers
+  const fetchWorkers = async () => {
+    try {
+      setTableLoading(true);
+      setTableError('');
+      const response = await fetch(API_BASE_URL);
+      if (!response.ok) {
+        throw new Error('Failed to fetch workers');
+      }
+      const data = await response.json();
+      // Transform data to match the expected format
+      const transformedData = data.map((worker, index) => ({
+        userId: String(worker.id).padStart(2, '0'),
+        userName: worker.name,
+        email: worker.email,
+        mobileNo: worker.workerDetails || worker.mobile_no
+      }));
+      setStatusHistory(transformedData);
+    } catch (err) {
+      setTableError('Failed to load user data');
+      console.error('Error fetching workers:', err);
+    } finally {
+      setTableLoading(false);
+    }
+  };
+
   // Fetch registered workers on component mount
   useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        setTableLoading(true);
-        setTableError('');
-        const response = await fetch(API_BASE_URL);
-        if (!response.ok) {
-          throw new Error('Failed to fetch workers');
-        }
-        const data = await response.json();
-        // Transform data to match the expected format
-        const transformedData = data.map((worker, index) => ({
-          userId: String(worker.id).padStart(2, '0'),
-          userName: worker.name,
-          email: worker.email,
-          mobileNo: worker.workerDetails || worker.mobile_no
-        }));
-        setStatusHistory(transformedData);
-      } catch (err) {
-        setTableError('Failed to load user data');
-        console.error('Error fetching workers:', err);
-      } finally {
-        setTableLoading(false);
-      }
-    };
-
     fetchWorkers();
   }, []);
+
+  // Handle See All button click
+  const handleSeeAll = () => {
+    fetchWorkers();
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -415,7 +421,10 @@ export default function User() {
             
             {/* See All Button */}
             <div className="border-t border-gray-200 px-6 py-3 text-center">
-              <button className="text-blue-600 font-medium hover:text-blue-800 transition-colors">
+              <button
+                onClick={handleSeeAll}
+                className="text-blue-600 font-medium hover:text-blue-800 transition-colors"
+              >
                 See All
               </button>
             </div>

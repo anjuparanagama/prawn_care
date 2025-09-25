@@ -126,7 +126,7 @@ export default function Assigntask() {
                     <button
                       onClick={handleUpdate}
                       className="w-full sm:flex-1 lg:w-60 bg-[#0616F9] text-white px-4 py-2 sm:py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                      Update
+                      Assign Task
                     </button>
                   </div>
                 </div>

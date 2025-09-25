@@ -8,6 +8,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
     router.push('/Login');
   };

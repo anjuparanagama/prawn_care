@@ -53,11 +53,13 @@ export default function BasicTable() {
               <tr key={row.itemID || row.id || index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                 <td className="px-4 py-3 text-sm font-medium text-gray-900">{row.itemID || row.item_id}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{row.itemName || row.name}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{row.Quantity || row.quantity}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {row.Quantity || row.quantity} {(row.Quantity || row.quantity) < ((row.threshold || 0) + 25) ? '  ⚠️' : ''}
+                </td>
               </tr>
             ))}
             <tr>
-              <td colSpan={5} className="px-4 py-4 text-center">
+              <td colSpan={3} className="px-4 py-4 text-center">
                 <button
                   className="text-blue-600 font-medium hover:text-blue-800 hover:underline transition-colors"
                   onClick={() => setShowAll(!showAll)}

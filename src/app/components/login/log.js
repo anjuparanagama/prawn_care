@@ -9,6 +9,7 @@ export default function Login() {
   const [userName, setuserName] = useState("");
   const [password, setpassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
 
   function handleLogin(event) {
@@ -17,10 +18,18 @@ export default function Login() {
     console.log("Password:", password);
     axios.post('/api/login/login', {
       userName: userName,
-      password: password
+      password: password,
+      rememberMe: rememberMe
     })
     .then(response => {
       console.log("Login Success:", response.data);
+      // Store token based on remember me
+      if (rememberMe) {
+        localStorage.setItem('token', response.data.token);
+      } else {
+        sessionStorage.setItem('token', response.data.token);
+      }
+      sessionStorage.setItem('user', JSON.stringify(response.data.user));
       // Redirect to dashboard after successful login
       router.push('/Dashboard');
     })
@@ -89,9 +98,11 @@ export default function Login() {
           </div>
           <div className="flex items-center justify-between w-2/3">
             <div className="flex items-center">
-              <input 
-                type="checkbox" 
-                id="remember" 
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
               />
               <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">Remember me</label>
