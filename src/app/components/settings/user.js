@@ -201,8 +201,8 @@ export default function User() {
       });
 
       if (response.ok) {
-        // Remove from local state
         setStatusHistory(prev => prev.filter(user => user.userId !== userId));
+        alert('User deleted successfully');
       } else {
         alert('Failed to delete user');
       }
