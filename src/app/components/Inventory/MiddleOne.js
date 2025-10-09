@@ -4,7 +4,7 @@ import { useState } from 'react';
 export default function AddInventory() {
   const [itemName, setItemName] = useState('');
   const [qty, setQty] = useState('');
-  const [date, setDate] = useState('');
+  const [type, setType] = useState('');
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -18,8 +18,8 @@ export default function AddInventory() {
       return;
     }
 
-    if (!date) {
-      alert("Please select a date");
+    if (!type) {
+      alert("Please select a type");
       return;
     }
 
@@ -27,7 +27,7 @@ export default function AddInventory() {
       const res = await fetch("/api/inventory/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ itemName, qty, date }),
+        body: JSON.stringify({ itemName, qty, type }),
       });
 
       // Check if response is JSON
@@ -41,7 +41,7 @@ export default function AddInventory() {
       if (data.success) {
         alert(data.message || "Item added successfully");
         setItemName('');
-        setDate('');
+        setType('');
         setQty('');
       } else {
         alert(data.message || "Error adding item. Please try again.");
@@ -83,13 +83,18 @@ export default function AddInventory() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <label className="text-sm font-medium sm:min-w-[100px] lg:min-w-[120px]">Date</label>
-                    <input
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
+                    <label className="text-sm font-medium sm:min-w-[100px] lg:min-w-[120px]">Type</label>
+                    <select
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
                       className="w-full sm:flex-1 lg:w-60 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
-                    />
+                    >
+                      <option value="">Select type</option>
+                      <option value="prawns">Prawns</option>
+                      <option value="feeds">Feeds</option>
+                      <option value="equipments">Equipments</option>
+                      <option value="medicine">Medicine</option>
+                    </select>
                   </div>
                 </div>
 
@@ -144,13 +149,18 @@ export default function AddInventory() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Date</label>
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                <label className="block text-sm font-medium mb-2">Type</label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm"
-                />
+                >
+                  <option value="">Select type</option>
+                  <option value="prawns">Prawns</option>
+                  <option value="feeds">Feeds</option>
+                  <option value="equipments">Equipments</option>
+                  <option value="medicine">Medicine</option>
+                </select>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
@@ -164,13 +174,13 @@ export default function AddInventory() {
             </div>
 
             {/* Preview Section */}
-            {(itemName || qty || date) && (
+            {(itemName || qty || type) && (
               <div className="mt-4 p-4 bg-gray-50 rounded-md border-l-4 border-blue-500">
                 <h3 className="text-sm font-medium mb-2">Preview:</h3>
                 <div className="text-xs space-y-1">
                   {itemName && <div><span className="font-medium">Item Name:</span> {itemName}</div>}
                   {qty && <div><span className="font-medium">Quantity:</span> {qty}</div>}
-                  {date && <div><span className="font-medium">Date:</span> {date}</div>}
+                  {type && <div><span className="font-medium">Type:</span> {type}</div>}
                 </div>
               </div>
             )}
