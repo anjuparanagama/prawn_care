@@ -73,7 +73,7 @@ export default function OrderStatus({ orderId }) {
   if (loading) return <div>Loading order status...</div>;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow p-8">
+    <div className="bg-white  border-gray-200 rounded-xl p-8">
       <h3 className="font-semibold mb-2">Order Status</h3>
       <p className="mb-4">Current Status: <strong>{orderStatus}</strong></p>
       {(orderStatus === "New" || orderStatus === "Processing") && !approvedOrRejected && (
