@@ -11,9 +11,13 @@ export default function Assigntask() {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(`/api/dashboard/assign-task/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ title, description }),
       });
 
