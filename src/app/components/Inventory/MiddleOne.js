@@ -58,7 +58,7 @@ export default function AddInventory() {
 
   return (
     <div className="bg-white ">
-      <div className="w-full p-3 sm:p-4 md:p-6">
+      <div className="w-full sm:p-4 md:p-6 -mt-8 pt-[-20px]">
         <div className="bg-blue-100 rounded-md p-3 mb-2 sm:mb-3">
           <h2 className="text-center text-blue-900 italic text-sm sm:text-base font-medium">
             New Items

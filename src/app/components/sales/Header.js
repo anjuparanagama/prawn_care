@@ -47,10 +47,10 @@ function Header() {
   };
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 lg:p-8 mx-auto w-full">
-      <div className="flex justify-between items-center mb-4 sm:mb-6 lg:mb-8">
+    <div className="p-3 sm:p-4 mx-auto w-full">
+      <div className="flex justify-between items-center sm:mb-6 lg:mb-2">
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1C00B8]">Sales</h1>
-        <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 items-center">
+        <div className="flex flex-row gap-2 sm:gap-3 lg:gap-2 items-center">
           <button
             onClick={() => setShowCalendar(!showCalendar)}
             className="border border-gray-300 px-3 py-2 rounded-md text-xs sm:text-sm flex items-center gap-2 shadow-sm hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200"

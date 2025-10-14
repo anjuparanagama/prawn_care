@@ -7,6 +7,15 @@ export default function Salestable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year} - ${month} - ${day}`;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,7 +92,7 @@ export default function Salestable() {
                     {row.Customer}
                   </td>
                   <td className="px-3 lg:px-6 py-4 text-sm text-gray-500">
-                    {row.Order_Date}
+                    {formatDate(row.Order_Date)}
                   </td>
                   <td className="px-3 lg:px-6 py-4 text-sm">
                     <span
@@ -129,7 +138,7 @@ export default function Salestable() {
                     <span className="text-sm font-medium text-gray-900">
                       {row.Order_ID}
                     </span>
-                    <span className="text-xs text-gray-500">{row.Order_Date}</span>
+                    <span className="text-xs text-gray-500">{formatDate(row.Order_Date)}</span>
                   </div>
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${

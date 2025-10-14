@@ -9,7 +9,7 @@ export default function Home() {
     <div className="flex min-h-screen">
       <Navbar />
 
-      <div className="flex-grow flex flex-col p-6 gap-6 ml-[250px] ">
+      <div className="flex-grow flex flex-col p-6 pb-0 gap-6 ml-[250px] ">
             <Header />
             <Graph />
             <Salestable />           

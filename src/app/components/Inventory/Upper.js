@@ -4,25 +4,14 @@ import { useState, useEffect } from 'react';
 export default function InventoryPage() {
   const [id, setItemID] = useState('');
   const [qty, setQty] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [items, setItems] = useState([]);
 
   const [idIssue, setIdIssue] = useState('');
   const [qtyIssue, setQtyIssue] = useState('');
-  const [dateIssue, setDateIssue] = useState('');
+  const [dateIssue, setDateIssue] = useState(new Date().toISOString().split('T')[0]);
 
-  // Calculate min and max dates (5 days before today up to today)
-  const getMinDate = () => {
-    const today = new Date();
-    const fiveDaysAgo = new Date(today);
-    fiveDaysAgo.setDate(today.getDate() - 5);
-    return fiveDaysAgo.toISOString().split('T')[0];
-  };
 
-  const getMaxDate = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -62,7 +51,7 @@ export default function InventoryPage() {
         alert(data.message || "Item updated successfully");
         setItemID('');
         setQty('');
-        setDate('');
+        setDate(new Date().toISOString().split('T')[0]);
       } else {
         alert(data.message || "Error updating item. Please try again.");
       }
@@ -117,7 +106,7 @@ export default function InventoryPage() {
         alert(data.message || "Item issued successfully");
         setIdIssue('');
         setQtyIssue('');
-        setDateIssue('');
+        setDateIssue(new Date().toISOString().split('T')[0]);
       } else {
         alert(data.message || "Error issuing item. Please try again.");
       }
@@ -212,10 +201,8 @@ export default function InventoryPage() {
                     <input
                       type="date"
                       value={dateIssue}
-                      onChange={(e) => setDateIssue(e.target.value)}
-                      min={getMinDate()}
-                      max={getMaxDate()}
-                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-gray-200 focus:border-transparent"
+                      readOnly
+                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm bg-gray-100 cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -298,10 +285,8 @@ export default function InventoryPage() {
                     <input
                       type="date"
                       value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      min={getMinDate()}
-                      max={getMaxDate()}
-                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm focus:ring-2 focus:ring-gray-200 focus:border-transparent"
+                      readOnly
+                      className="w-full sm:flex-1 lg:w-60 border border-l-4 border-gray-300 rounded-md px-2 py-1.5 sm:py-2 text-sm bg-gray-100 cursor-not-allowed"
                     />
                   </div>
                 </div>
