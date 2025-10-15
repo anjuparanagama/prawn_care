@@ -59,12 +59,10 @@ export default function User() {
     }
   };
 
-  // Fetch registered workers on component mount
   useEffect(() => {
     fetchWorkers();
   }, []);
 
-  // Handle See All button click
   const handleSeeAll = () => {
     fetchWorkers();
   };
@@ -84,6 +82,21 @@ export default function User() {
   const handleAddUser = async () => {
     if (!formData.userName || !formData.email || !formData.mobileNo || !formData.password) {
       setError('All fields are required');
+      return;
+    }
+
+    if (!formData.email.includes('@')) {
+      setError('Email must contain @');
+      return;
+    }
+
+    if (formData.password.length <= 6) {
+      setError('Password must be longer than 6 characters');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(formData.mobileNo)) {
+      setError('Mobile number must be exactly 10 digits.');
       return;
     }
 
@@ -109,7 +122,9 @@ export default function User() {
 
       if (response.ok) {
         setSuccess('Worker registered successfully!');
-        // Add to statusHistory for immediate UI update
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
         const newUser = {
           userId: String(statusHistory.length + 1).padStart(2, '0'),
           userName: formData.userName,
