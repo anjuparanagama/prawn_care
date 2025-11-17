@@ -38,7 +38,7 @@ export default function BasicTable() {
 
   return (
     <div className="w-full p-3 sm:p-4 md:p-6 bg-gray-50">
-      {/* Universal Table for All Devices */}
+      {/* Universal Table for All Devices  thashmi */}
       <div className="bg-white rounded-lg shadow-sm overflow-auto">
         <table className="w-full min-w-[600px]">
           <thead className="bg-blue-100">
