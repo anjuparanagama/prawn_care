@@ -81,9 +81,9 @@ function Table() {
         </thead>
         <tbody className="">
           {groupedData.map((group, groupIdx) => (
-            <React.Fragment key={group.time}>
+            <React.Fragment key={`${group.date}-${group.time}`}>
           {group.tanks.map((tank, tankIdx) => (
-            <tr key={group.time + tank.tank + tankIdx} className={(groupIdx + tankIdx) % 2 === 0 ? 'bg-blue-50' : ''}>
+            <tr key={`${group.date}-${group.time}-${tank.tank}`} className={(groupIdx + tankIdx) % 2 === 0 ? 'bg-blue-50' : ''}>
               {tankIdx === 0 && (
                 <>
                   <td rowSpan={group.tanks.length} className="py-2 text-center font-bold text-blue-800">{group.date}</td>

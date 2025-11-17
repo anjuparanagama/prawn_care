@@ -9,14 +9,14 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
 function Header() {
-  const [startDate, setStartDate] = useState("2025-04-08");
-  const [endDate, setEndDate] = useState("2025-05-08");
+  const [startDate, setStartDate] = useState("2025-10-08");
+  const [endDate, setEndDate] = useState("2025-11-08");
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [range, setRange] = useState([
     {
-      startDate: new Date(2025, 4, 8),
-      endDate: new Date(2025, 4, 20),
+      startDate: new Date(2025, 9, 8),
+      endDate: new Date(2025, 9, 20),
       key: "selection",
     },
   ]);
