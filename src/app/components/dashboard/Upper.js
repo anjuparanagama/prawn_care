@@ -43,19 +43,6 @@ export default function DashboardCards() {
     fetchData();
   }, []);
 
-  // Calculate percentage changes
-  const revenueChange = prevTotalRevenue !== 0 
-    ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100 
-    : 0; // Avoid division by zero
-
-  const ordersChange = prevNewOrders !== 0 
-    ? ((newOrders - prevNewOrders) / prevNewOrders) * 100 
-    : 0; // Avoid division by zero
-
-  const stockChange = prevLowStockItems !== 0 
-    ? lowStockItems - prevLowStockItems 
-    : 0; // Simple difference for stock change
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {/* Total Revenue */}
