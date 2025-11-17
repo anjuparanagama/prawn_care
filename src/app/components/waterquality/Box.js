@@ -69,7 +69,7 @@ function Box() {
   }, []);
 
   return (
-    <div className="p-2 grid grid-cols-1 -mt-5 md:grid-cols-3 gap-6">
+    <div className="p-2 grid grid-cols-1 -mt-16 md:grid-cols-3 gap-6">
       {/* Average pH */}
       <div className="bg-white p-4 rounded-lg shadow-md flex flex-row items-center gap-4">
         <GiChemicalDrop className=" text-3xl" />
@@ -78,7 +78,7 @@ function Box() {
           <div className="text-2xl font-bold text-blue-900">
             {loadingPH ? "Loading..." : errorPH ? `Error: ${errorPH}` : averagePH}
           </div>
-          <div className="text-sm text-gray-500">Optimal Range : 7.0 - 7.8</div>
+          <div className="text-sm text-gray-500">Optimal Range : 6.0 - 7.8</div>
         </div>
       </div>
       {/* Average Salinity */}
@@ -89,7 +89,7 @@ function Box() {
           <div className="text-2xl font-bold text-blue-900">
             {loadingTDS ? "Loading..." : errorTDS ? `Error: ${errorTDS}` : `${averageTDS} ppm`}
           </div>
-          <div className="text-sm text-gray-500">Optimal Range : 80.0 - 200.0 ppm</div>
+          <div className="text-sm text-gray-500">Optimal Range : 40.0 - 100.0 NTU</div>
         </div>
       </div>
       {/* Average Temp */}

@@ -11,13 +11,13 @@ function Header() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [range, setRange] = useState([
     {
-      startDate: new Date(2025, 4, 8),
+      startDate: new Date(2025, 9, 8),
       endDate: new Date(2025, 4, 20),
       key: "selection",
     },
   ]);
 
-  const formattedRange = `${format(range[0].startDate, "dd MMM yyyy")} - ${format(
+  const formattedRange = `${format(range[0].startDate, " dd MMM yyyy")} - ${format(
     range[0].endDate,
     "dd MMM yyyy"
   )}`;
@@ -26,23 +26,24 @@ function Header() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async () => { /*Updates the form value when the user types*/
     try {
-      const startDate = format(range[0].startDate, "yyyy-MM-dd");
-      const endDate = format(range[0].endDate, "yyyy-MM-dd");
-      const res = await fetch(`/api/sales/downloadpdf?start=${startDate}&end=${endDate}`);
-      if (!res.ok) throw new Error("Failed to download PDF");
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const startDate = format(range[0].startDate, "yyyy-MM-dd");       /*Takes the selected start date and formats it like: 2025-05-08.*/ 
+      const endDate = format(range[0].endDate, "yyyy-MM-dd");           /*Takes the selected end date and formats it the same way.*/
+      const res = await fetch(`/api/sales/downloadpdf?start=${startDate}&end=${endDate}`); /*Sends a request to your backend to get the PDF file for the selected dates. */
+      if (!res.ok) throw new Error("Failed to download PDF"); /*If the server did not respond correctly, stop and show an error.*/
+      const blob = await res.blob(); /*Takes the server’s response and converts it into a file object (PDF)*/
+
+      const url = window.URL.createObjectURL(blob);/*Creates a temporary download link for the PDF file.*/
+      const a = document.createElement("a");/*Creates a hidden download button in the browser.*/ 
       a.href = url;
       a.download = "Sales.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      document.body.appendChild(a);/*Adds the hidden button to the page.*/ 
+      a.click();/*Clicks the hidden button automatically to start download.*/ 
+      document.body.removeChild(a);/*Removes the button after clicking (clean-up).*/ 
+      window.URL.revokeObjectURL(url);/*Deletes the temporary file link to free memory.*/ 
     } catch (error) {
-      alert("Error downloading PDF: " + error.message);
+      alert("Error downloading PDF: " + error.message);/**/
     }
   };
 
@@ -68,7 +69,7 @@ function Header() {
       </div>
 
       {showCalendar && (
-        <div className="mb-4 sm:mb-6 lg:mb-8 overflow-x-auto bg-white rounded-lg shadow-sm border">
+        <div className="mb-4 sm:mb-6 lg:mb-8 overflow-x-auto bg-amber-50 rounded-lg shadow-sm border">
           <DateRange
             editableDateInputs={true}
             onChange={(item) => setRange([item.selection])}
